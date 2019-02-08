@@ -1,5 +1,6 @@
 package de.hhu.propra2.propay
 
+import de.hhu.propra2.propay.services.MoneyService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -23,5 +24,4 @@ class AccountController {
                      @PathVariable targetAccount: String,
                      @RequestParam amount: Double) =
             moneyService.transfer(sourceAccount, targetAccount, amount)
-
 }

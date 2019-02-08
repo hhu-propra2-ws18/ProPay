@@ -5,7 +5,7 @@ import org.springframework.boot.web.servlet.ServletContextInitializer
 import org.springframework.stereotype.Component
 import javax.servlet.ServletContext
 
-@Component
+//@Component
 class Initializer : ServletContextInitializer {
     @Autowired
     lateinit var accountRepository: AccountRepository
