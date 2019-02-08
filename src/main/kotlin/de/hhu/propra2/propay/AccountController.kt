@@ -9,21 +9,36 @@ class AccountController {
     @Autowired
     lateinit var moneyService: MoneyService
 
-    @GetMapping("/{team}/{account}")
-    fun getAccount(@PathVariable team: String,
-                   @PathVariable account: String): Account =
-            moneyService.getAccount(team, account)
+    @GetMapping("/account/{account}")
+    fun getAccount(@PathVariable account: String): Account =
+            moneyService.getAccount(account)
 
-    @PostMapping("/{team}/{account}")
-    fun postDeposit(@PathVariable team: String,
-                    @PathVariable account: String,
+    @PostMapping("/account/{account}")
+    fun postDeposit(@PathVariable account: String,
                     @RequestParam amount: Double): Account =
-            moneyService.deposit(team, account, amount)
+            moneyService.deposit(account, amount)
 
-    @PostMapping("/{team}/{sourceAccount}/{targetAccount}")
-    fun postTransfer(@PathVariable team: String,
-                     @PathVariable sourceAccount: String,
+    @PostMapping("/account/{sourceAccount}/transfer/{targetAccount}")
+    fun postTransfer(@PathVariable sourceAccount: String,
                      @PathVariable targetAccount: String,
                      @RequestParam amount: Double) =
-            moneyService.transfer(team, sourceAccount, targetAccount, amount)
+            moneyService.transfer(sourceAccount, targetAccount, amount)
+
+    //TODO: move to different controller
+    @PostMapping("/reservation/reserve/{account}/{targetAccount}")
+    fun postReserve(@PathVariable account: String,
+                    @PathVariable targetAccount: String,
+                    @RequestParam amount: Double): Reservation =
+            moneyService.reserve(account, targetAccount, amount)
+
+    @PostMapping("/reservation/release/{account}")
+    fun postRelease(@PathVariable account: String,
+                    @RequestParam reservationId: Long): Account =
+            moneyService.releaseReservation(account, reservationId)
+
+    @PostMapping("/reservation/punish/{account}")
+    fun postPunish(@PathVariable account: String,
+                   @RequestParam reservationId: Long): Account =
+            moneyService.punishAndTransferReservation(account, reservationId)
+
 }

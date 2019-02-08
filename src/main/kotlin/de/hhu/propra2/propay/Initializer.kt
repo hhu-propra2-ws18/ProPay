@@ -11,13 +11,13 @@ class Initializer : ServletContextInitializer {
     lateinit var accountRepository: AccountRepository
 
     override fun onStartup(ctx: ServletContext?) {
-        val account = Account(null, "hi", "foo", 100.0)
+        val account = Account(null, "foo", 100.0)
         accountRepository.save(account)
 
-        val account2 = Account(null, "bye", "bar", 200.0)
+        val account2 = Account(null, "bar", 200.0)
         accountRepository.save(account2)
 
-        val account3 = Account(null, "lorem", "ipsum", -100.0)
+        val account3 = Account(null, "ipsum", -100.0)
         accountRepository.save(account3)
 
     }

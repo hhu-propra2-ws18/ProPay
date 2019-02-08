@@ -6,16 +6,18 @@ import javax.persistence.*
 
 // TODO: timestamps
 @Entity
-@Table(uniqueConstraints = [UniqueConstraint(columnNames = ["team", "account"])])
-data class Account(@Id @GeneratedValue @JsonIgnore var id: Double? = null,
-                   var team: String,
+@Table(uniqueConstraints = [UniqueConstraint(columnNames = ["account"])])
+data class Account(@Id @GeneratedValue @JsonIgnore var id: Long? = null,
                    var account: String,
                    var amount: Double,
-                   @OneToMany var reservations: List<Reservation> = Collections.emptyList()) {
+                   @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)  var reservations: MutableList<Reservation> = Collections.emptyList()) {
 
     fun canCover(amount: Double): Boolean {
         val blocked = reservations.sumByDouble { reservation -> reservation.amount }
         return this.amount - blocked >= amount
     }
+
+    fun availableAmount() =
+            this.amount - reservations.sumByDouble { reservation -> reservation.amount }
 }
 

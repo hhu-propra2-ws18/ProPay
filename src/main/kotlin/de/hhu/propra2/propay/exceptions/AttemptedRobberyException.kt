@@ -1,4 +1,4 @@
-package de.hhu.propra2.propay
+package de.hhu.propra2.propay.exceptions
 
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
