@@ -13,36 +13,34 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 
 
-class MoneyServiceTest {
+class AccountServiceTest {
 
     private lateinit var accountRepository: AccountRepository
-    private lateinit var moneyService: MoneyService
+    private lateinit var accountService: AccountService
 
     @Before
     fun setup() {
 
         accountRepository = mock(AccountRepository::class.java)
-        moneyService = MoneyService(accountRepository)
+        accountService = AccountService(accountRepository)
     }
 
     @Test
     fun getAccount() {
-        val moneyService = MoneyService(accountRepository)
-
         Mockito.`when`(accountRepository.findByAccount("asdf"))
                 .thenReturn(null)
         Mockito.`when`(accountRepository.findByAccount("foo"))
                 .thenReturn(Account(123, "foo", 0.0))
 
-        assertNull(moneyService.getAccount("asdf").id)
+        assertNull(accountService.getAccount("asdf").id)
 
         assertEquals("asdf",
-                moneyService.getAccount("asdf").account)
+                accountService.getAccount("asdf").account)
 
-        assertEquals(123L, moneyService.getAccount("foo").id)
+        assertEquals(123L, accountService.getAccount("foo").id)
 
         assertEquals("foo",
-                moneyService.getAccount("foo").account)
+                accountService.getAccount("foo").account)
 
 
     }
@@ -57,7 +55,7 @@ class MoneyServiceTest {
                 .`when`(accountRepository.save(Account(123, "foo", amount)))
                 .thenReturn(Account(123, "foo", amount))
 
-        assertEquals(amount, moneyService.deposit("foo", amount).amount, 0.1)
+        assertEquals(amount, accountService.deposit("foo", amount).amount, 0.1)
     }
 
     @Test(expected = AttemptedRobberyException::class)
@@ -65,7 +63,7 @@ class MoneyServiceTest {
         Mockito.`when`(accountRepository.findByAccount("foo"))
                 .thenReturn(Account(123, "foo", 0.0))
 
-        moneyService.deposit("foo", -100.0)
+        accountService.deposit("foo", -100.0)
     }
 
 
@@ -73,7 +71,7 @@ class MoneyServiceTest {
     fun transferNegativeAmount() {
         val acc1 = Account(1, "User 1", .0)
         val acc2 = Account(2, "User 2", .0)
-        moneyService.transfer(acc1, acc2, -1.0)
+        accountService.transfer(acc1, acc2, -1.0)
     }
 
     @Test(expected = InsufficientFundsException::class)
@@ -81,7 +79,7 @@ class MoneyServiceTest {
         val acc1 = Account(1, "User 1", .0)
         val acc2 = Account(2, "User 2", .0)
 
-        moneyService.transfer(acc1, acc2, 1.1)
+        accountService.transfer(acc1, acc2, 1.1)
     }
 
     @Test
@@ -92,7 +90,7 @@ class MoneyServiceTest {
         Mockito.`when`(accountRepository.save(acc1)).thenReturn(acc1)
         Mockito.`when`(accountRepository.save(acc2)).thenReturn(acc2)
 
-        moneyService.transfer(acc1, acc2, 1.1)
+        accountService.transfer(acc1, acc2, 1.1)
 
         assertEquals(8.9, acc1.amount, .1)
         assertEquals(11.1, acc2.amount, .1)
@@ -104,6 +102,6 @@ class MoneyServiceTest {
 
         Mockito.`when`(accountRepository.save(acc1)).thenReturn(acc1)
 
-        moneyService.transfer(acc1, acc1, 1.1)
+        accountService.transfer(acc1, acc1, 1.1)
     }
 }

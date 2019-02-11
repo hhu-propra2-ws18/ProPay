@@ -19,7 +19,7 @@ import kotlin.collections.ArrayList
 
 class ReservationServiceTest {
 
-    private lateinit var moneyService: MoneyService
+    private lateinit var accountService: AccountService
     private lateinit var reservationRepository: ReservationRepository
 
     private lateinit var testReservation: Reservation
@@ -31,7 +31,7 @@ class ReservationServiceTest {
 
     @Before
     fun setup() {
-        moneyService = mock(MoneyService::class.java)
+        accountService = mock(AccountService::class.java)
         reservationRepository = mock(ReservationRepository::class.java)
 
         acc1 = Account(1, "User 1", .0)
@@ -39,34 +39,34 @@ class ReservationServiceTest {
 
         testReservation = Reservation(199, reservationAmount, acc2)
 
-        Mockito.`when`(moneyService.getAccount("User 1")).thenReturn(acc1)
-        Mockito.`when`(moneyService.getAccount("User 2")).thenReturn(acc2)
+        Mockito.`when`(accountService.getAccount("User 1")).thenReturn(acc1)
+        Mockito.`when`(accountService.getAccount("User 2")).thenReturn(acc2)
     }
 
     @Test(expected = AttemptedRobberyException::class)
     fun reserveNegativeAmount() {
-        val reservationService = ReservationService(moneyService, reservationRepository)
+        val reservationService = ReservationService(accountService, reservationRepository)
 
         reservationService.reserve("User 1", "User 2", -1.0)
     }
 
     @Test(expected = InsufficientFundsException::class)
     fun reserveWithoutCoverage() {
-        val reservationService = ReservationService(moneyService, reservationRepository)
+        val reservationService = ReservationService(accountService, reservationRepository)
 
         reservationService.reserve("User 1", "User 2", 1.0)
     }
 
     @Test(expected = NiceTryException::class)
     fun reserveWithSameSourceAndTarget() {
-        val reservationService = ReservationService(moneyService, reservationRepository)
+        val reservationService = ReservationService(accountService, reservationRepository)
 
         reservationService.reserve("User 1", "User 1", 1.0)
     }
 
     @Test
     fun testReservation() {
-        val reservationService = ReservationService(moneyService, reservationRepository)
+        val reservationService = ReservationService(accountService, reservationRepository)
 
         acc1.amount = reservationAmount * 2
         acc1.reservations = ArrayList()
@@ -86,7 +86,7 @@ class ReservationServiceTest {
 
     @Test(expected = ReservationNotFoundException::class)
     fun releaseNonExistentReservation() {
-        val reservationService = ReservationService(moneyService, reservationRepository)
+        val reservationService = ReservationService(accountService, reservationRepository)
 
         Mockito.`when`(reservationRepository.findById(1)).thenReturn(Optional.empty())
 
@@ -95,7 +95,7 @@ class ReservationServiceTest {
 
     @Test
     fun testRelease() {
-        val reservationService = ReservationService(moneyService, reservationRepository)
+        val reservationService = ReservationService(accountService, reservationRepository)
         Mockito.`when`(reservationRepository.findById(1)).thenReturn(Optional.of(testReservation))
 
         acc1.reservations = listOf(testReservation).toMutableList()
@@ -108,7 +108,7 @@ class ReservationServiceTest {
 
     @Test
     fun punishAndTransferReservation() {
-        val reservationService = ReservationService(moneyService, reservationRepository)
+        val reservationService = ReservationService(accountService, reservationRepository)
 
         acc1.amount = 200.0
         acc1.reservations = listOf(testReservation).toMutableList()
@@ -123,16 +123,16 @@ class ReservationServiceTest {
 
 
         assertEquals(0, acc1.reservations.size)
-        Mockito.verify(moneyService, times(1))
+        Mockito.verify(accountService, times(1))
                 .transfer(acc1, acc2, reservationAmount)
     }
 
     @Test
     fun punishAndTransferReservationNoFunds() {
-        val reservationService = ReservationService(moneyService, reservationRepository)
+        val reservationService = ReservationService(accountService, reservationRepository)
 
         Mockito.`when`(reservationRepository.findById(1)).thenReturn(Optional.of(testReservation))
-        Mockito.`when`(moneyService.transfer(acc1, acc2, reservationAmount))
+        Mockito.`when`(accountService.transfer(acc1, acc2, reservationAmount))
                 .thenThrow(InsufficientFundsException(acc1, reservationAmount))
 
         acc1.reservations = listOf(testReservation).toMutableList()
@@ -149,7 +149,7 @@ class ReservationServiceTest {
 
     @Test(expected = ReservationNotFoundException::class)
     fun punishAndTransferNonExistentReservation() {
-        val reservationService = ReservationService(moneyService, reservationRepository)
+        val reservationService = ReservationService(accountService, reservationRepository)
 
         Mockito.`when`(reservationRepository.findById(1)).thenReturn(Optional.empty())
 

@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class ReservationService(private @Autowired val moneyService: MoneyService,
+class ReservationService(private @Autowired val accountService: AccountService,
                          private @Autowired val reservationRepository: ReservationRepository) {
 
 
     fun reserve(account: String, targetAccount: String, amount: Double): Reservation {
-        val acc = moneyService.getAccount(account)
-        val target = moneyService.getAccount(targetAccount)
+        val acc = accountService.getAccount(account)
+        val target = accountService.getAccount(targetAccount)
 
         if (target == acc) {
             throw NiceTryException(acc)
@@ -33,28 +33,28 @@ class ReservationService(private @Autowired val moneyService: MoneyService,
 
         val reservation = reservationRepository.save(Reservation(null, amount, target))
         acc.reservations.add(reservation)
-        moneyService.save(acc)
+        accountService.save(acc)
         return reservation
     }
 
     fun releaseReservation(account: String, reservationId: Long): Account {
-        val acc = moneyService.getAccount(account)
+        val acc = accountService.getAccount(account)
         val reservation = reservationRepository
                 .findById(reservationId)
                 .orElseThrow { ReservationNotFoundException(acc, reservationId) }
         acc.reservations.remove(reservation)
-        return moneyService.save(acc)
+        return accountService.save(acc)
     }
 
     fun punishAndTransferReservation(account: String, reservationId: Long): Account {
-        val acc = moneyService.getAccount(account)
+        val acc = accountService.getAccount(account)
         val reservation = reservationRepository
                 .findById(reservationId)
                 .orElseThrow { ReservationNotFoundException(acc, reservationId) }
 
         val target = reservation.targetAccount
 
-        val result = moneyService.transfer(acc, target, reservation.amount)
+        val result = accountService.transfer(acc, target, reservation.amount)
         acc.reservations.remove(reservation)
         return result
     }

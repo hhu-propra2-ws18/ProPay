@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class MoneyService(private @Autowired val accountRepository: AccountRepository) {
+class AccountService(private @Autowired val accountRepository: AccountRepository) {
 
     fun getAccount(account: String): Account =
             accountRepository.findByAccount(account)
