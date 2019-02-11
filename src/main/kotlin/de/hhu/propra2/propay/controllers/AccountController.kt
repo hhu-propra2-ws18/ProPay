@@ -1,5 +1,6 @@
-package de.hhu.propra2.propay
+package de.hhu.propra2.propay.controllers
 
+import de.hhu.propra2.propay.entities.Account
 import de.hhu.propra2.propay.services.MoneyService
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired

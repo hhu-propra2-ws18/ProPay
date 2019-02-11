@@ -1,4 +1,4 @@
-package de.hhu.propra2.propay
+package de.hhu.propra2.propay.controllers
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping

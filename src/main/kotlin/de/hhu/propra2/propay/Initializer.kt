@@ -1,8 +1,9 @@
 package de.hhu.propra2.propay
 
+import de.hhu.propra2.propay.entities.Account
+import de.hhu.propra2.propay.repositories.AccountRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.web.servlet.ServletContextInitializer
-import org.springframework.stereotype.Component
 import javax.servlet.ServletContext
 
 //@Component

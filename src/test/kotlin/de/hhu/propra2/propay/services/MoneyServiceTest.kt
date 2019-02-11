@@ -1,10 +1,10 @@
 package de.hhu.propra2.propay.services
 
-import de.hhu.propra2.propay.Account
-import de.hhu.propra2.propay.AccountRepository
+import de.hhu.propra2.propay.entities.Account
 import de.hhu.propra2.propay.exceptions.AttemptedRobberyException
 import de.hhu.propra2.propay.exceptions.InsufficientFundsException
 import de.hhu.propra2.propay.exceptions.NiceTryException
+import de.hhu.propra2.propay.repositories.AccountRepository
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before

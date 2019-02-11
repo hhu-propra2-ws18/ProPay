@@ -1,12 +1,12 @@
 package de.hhu.propra2.propay.services
 
-import de.hhu.propra2.propay.Account
-import de.hhu.propra2.propay.Reservation
-import de.hhu.propra2.propay.ReservationRepository
+import de.hhu.propra2.propay.entities.Account
+import de.hhu.propra2.propay.entities.Reservation
 import de.hhu.propra2.propay.exceptions.AttemptedRobberyException
 import de.hhu.propra2.propay.exceptions.InsufficientFundsException
 import de.hhu.propra2.propay.exceptions.NiceTryException
 import de.hhu.propra2.propay.exceptions.ReservationNotFoundException
+import de.hhu.propra2.propay.repositories.ReservationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
