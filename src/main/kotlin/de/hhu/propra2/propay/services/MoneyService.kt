@@ -4,13 +4,12 @@ import de.hhu.propra2.propay.Account
 import de.hhu.propra2.propay.AccountRepository
 import de.hhu.propra2.propay.exceptions.AttemptedRobberyException
 import de.hhu.propra2.propay.exceptions.InsufficientFundsException
+import de.hhu.propra2.propay.exceptions.NiceTryException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class MoneyService {
-    @Autowired
-    private lateinit var accountRepository: AccountRepository
+class MoneyService(private @Autowired val accountRepository: AccountRepository) {
 
     fun getAccount(account: String): Account =
             accountRepository.findByAccount(account)
@@ -34,6 +33,10 @@ class MoneyService {
     }
 
     fun transfer(source: Account, target: Account, amount: Double): Account {
+        if (target == source) {
+            throw NiceTryException(source)
+        }
+
         if (amount < 0) {
             throw AttemptedRobberyException(amount)
         }

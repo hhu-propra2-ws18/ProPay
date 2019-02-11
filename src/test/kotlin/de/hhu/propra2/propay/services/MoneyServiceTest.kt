@@ -2,35 +2,33 @@ package de.hhu.propra2.propay.services
 
 import de.hhu.propra2.propay.Account
 import de.hhu.propra2.propay.AccountRepository
+import de.hhu.propra2.propay.exceptions.AttemptedRobberyException
+import de.hhu.propra2.propay.exceptions.InsufficientFundsException
+import de.hhu.propra2.propay.exceptions.NiceTryException
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mockito
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.TestConfiguration
-import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.Bean
-import org.springframework.test.context.junit4.SpringRunner
+import org.mockito.Mockito.mock
 
-@RunWith(SpringRunner::class)
+
 class MoneyServiceTest {
 
-    @TestConfiguration
-    class EmployeeServiceImplTestContextConfiguration {
+    private lateinit var accountRepository: AccountRepository
+    private lateinit var moneyService: MoneyService
 
-        @Bean
-        fun moneyService(): MoneyService = MoneyService()
+    @Before
+    fun setup() {
+
+        accountRepository = mock(AccountRepository::class.java)
+        moneyService = MoneyService(accountRepository)
     }
-
-    @Autowired
-    lateinit var moneyService: MoneyService
-
-    @MockBean
-    lateinit var accountRepository: AccountRepository
 
     @Test
     fun getAccount() {
+        val moneyService = MoneyService(accountRepository)
+
         Mockito.`when`(accountRepository.findByAccount("asdf"))
                 .thenReturn(null)
         Mockito.`when`(accountRepository.findByAccount("foo"))
@@ -62,15 +60,50 @@ class MoneyServiceTest {
         assertEquals(amount, moneyService.deposit("foo", amount).amount, 0.1)
     }
 
-    @Test
-    fun transfer() {
+    @Test(expected = AttemptedRobberyException::class)
+    fun depositNegativeAmount() {
+        Mockito.`when`(accountRepository.findByAccount("foo"))
+                .thenReturn(Account(123, "foo", 0.0))
+
+        moneyService.deposit("foo", -100.0)
+    }
+
+
+    @Test(expected = AttemptedRobberyException::class)
+    fun transferNegativeAmount() {
+        val acc1 = Account(1, "User 1", .0)
+        val acc2 = Account(2, "User 2", .0)
+        moneyService.transfer(acc1, acc2, -1.0)
+    }
+
+    @Test(expected = InsufficientFundsException::class)
+    fun transferWithInsufficientFunds() {
+        val acc1 = Account(1, "User 1", .0)
+        val acc2 = Account(2, "User 2", .0)
+
+        moneyService.transfer(acc1, acc2, 1.1)
     }
 
     @Test
-    fun transfer1() {
+    fun transferBetweenAcounts() {
+        val acc1 = Account(1, "User 1", 10.0)
+        val acc2 = Account(2, "User 2", 10.0)
+
+        Mockito.`when`(accountRepository.save(acc1)).thenReturn(acc1)
+        Mockito.`when`(accountRepository.save(acc2)).thenReturn(acc2)
+
+        moneyService.transfer(acc1, acc2, 1.1)
+
+        assertEquals(8.9, acc1.amount, .1)
+        assertEquals(11.1, acc2.amount, .1)
     }
 
-    @Test
-    fun save() {
+    @Test(expected = NiceTryException::class)
+    fun transferBetweenSameAcount() {
+        val acc1 = Account(1, "User 1", 10.0)
+
+        Mockito.`when`(accountRepository.save(acc1)).thenReturn(acc1)
+
+        moneyService.transfer(acc1, acc1, 1.1)
     }
 }

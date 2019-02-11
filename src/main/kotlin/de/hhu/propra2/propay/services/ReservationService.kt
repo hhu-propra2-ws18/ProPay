@@ -5,22 +5,24 @@ import de.hhu.propra2.propay.Reservation
 import de.hhu.propra2.propay.ReservationRepository
 import de.hhu.propra2.propay.exceptions.AttemptedRobberyException
 import de.hhu.propra2.propay.exceptions.InsufficientFundsException
+import de.hhu.propra2.propay.exceptions.NiceTryException
 import de.hhu.propra2.propay.exceptions.ReservationNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class ReservationService {
+class ReservationService(private @Autowired val moneyService: MoneyService,
+                         private @Autowired val reservationRepository: ReservationRepository) {
 
-    @Autowired
-    lateinit var moneyService: MoneyService
-
-    @Autowired
-    lateinit var reservationRepository: ReservationRepository
 
     fun reserve(account: String, targetAccount: String, amount: Double): Reservation {
         val acc = moneyService.getAccount(account)
         val target = moneyService.getAccount(targetAccount)
+
+        if (target == acc) {
+            throw NiceTryException(acc)
+        }
+
         if (amount < 0) {
             throw AttemptedRobberyException(amount)
         }
@@ -52,8 +54,9 @@ class ReservationService {
 
         val target = reservation.targetAccount
 
+        val result = moneyService.transfer(acc, target, reservation.amount)
         acc.reservations.remove(reservation)
-        return moneyService.transfer(acc, target, reservation.amount)
+        return result
     }
 
 }

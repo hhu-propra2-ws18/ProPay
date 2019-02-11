@@ -6,7 +6,7 @@ import org.springframework.boot.runApplication
 import javax.swing.Spring
 
 @SpringBootApplication
-open class PropayApplication
+class PropayApplication
 
 fun main(args: Array<String>) {
     SpringApplication.run(PropayApplication::class.java, *args)
