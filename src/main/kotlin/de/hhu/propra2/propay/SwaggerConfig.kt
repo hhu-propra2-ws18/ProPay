@@ -1,3 +1,5 @@
+package de.hhu.propra2.propay
+
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import springfox.documentation.builders.PathSelectors
@@ -16,9 +18,8 @@ class SwaggerConfig {
     fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant("/account"))
-                .paths(PathSelectors.ant("/reservation"))
+                .apis(RequestHandlerSelectors.basePackage("de.hhu.propra2.propay"))
+                .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
     }
