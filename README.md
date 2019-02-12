@@ -1,4 +1,7 @@
 # ProPay
+
+[![Build Status](https://travis-ci.org/hhu-propra2/ProPay.svg?branch=master)](https://travis-ci.org/hhu-propra2/ProPay)
+
 *Next generation Payment Processor*
 
 Hier finden Sie den Sourcecode zu ProPay -- der Zukunft von
@@ -56,7 +59,7 @@ Die Datenbank wird automatisch in die Datei `data/propay.mv.db` gesichert. Um
 einen neuen Container wieder mit den alten Daten zu starten, kann ein Volume
 Mapping durchgeführt werden:
 
-    docker run --name propay -v `pwd`/data/:/code/data -p 8888:8888 propra/propay:latest
+    docker run -v `pwd`/data/:/code/data -p 8888:8888 propra/propay:latest
 
 Um die Datenbank zurückzusetzen, genügt es die Datei `data/propay.mv.db` zu
 löschen.
@@ -71,3 +74,17 @@ Wenn ein Account nicht in der Datenbank gefunden werden konnte, erstellt ProPay
 automatisch einen Account für Sie. Dabei muss der Accountname natürlich
 eindeutig sein. Wie Sie diesen wählen, bleibt Ihnen überlassen. Der neue Account
 verfügt dann über ein Guthaben von 0 €.
+
+
+## Demo
+
+Eine Live-Demo des Systems befindet sich online und wird stets die aktuellste
+Version der API zur Verfügung stellen. Allerdings wird die Datenbank nicht
+persistiert, das heißt die Daten können jederzeit verloren gehen oder sogar von
+anderen Benutzern überschrieben werden.
+
+Da wir einen kostenfreien Account von Heroku für die Demo verwenden, kann der
+Start der Anwendung anfangs ein paar Sekunden dauern. Also einfach ein wenig
+warten, bis die Anwendung verfügbar ist.
+
+https://propra-propay.herokuapp.com/
