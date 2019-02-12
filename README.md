@@ -33,6 +33,34 @@ Alternativ kann auch das Gradle-Projekt direkt ausgeführt werden:
 
     ./gradlew bootRun
 
+### docker-compose
+
+ProPay lässt sich als Service in Ihre docker-compose Konfiguration einbinden:
+
+```
+services:
+  # ...
+  propay:
+    image: propra/propay
+    ports:
+      - "8888:8888"
+    # Optional
+    volumes:
+      - ./data:/code/data
+  # ...
+```
+
+### Persistenz
+
+Die Datenbank wird automatisch in die Datei `data/propay.mv.db` gesichert. Um
+einen neuen Container wieder mit den alten Daten zu starten, kann ein Volume
+Mapping durchgeführt werden:
+
+    docker run --name propay -v `pwd`/data/:/code/data -p 8888:8888 propra/propay:latest
+
+Um die Datenbank zurückzusetzen, genügt es die Datei `data/propay.mv.db` zu
+löschen.
+
 ## API
 
 Der Onlinebezahldienst stellt eine REST-API zur Verfügung. Die Dokumentation ist
