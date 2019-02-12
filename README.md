@@ -22,10 +22,10 @@ wenn eine Kaution wieder auf den Ursprungsaccount zurückerstattet werden soll.
 ## Installation
 
 ProPay kann bequem über
-[DockerHub](https://cloud.docker.com/u/propra/repository/docker/propra/propay)
+[DockerHub](https://hub.docker.com/r/propra/propay)
 als Image bezogen werden. Dafür müssen Sie nur folgenden Befehl ausführen:
 
-    docker run --name propay -p 8888:8888 propra/propay:latest
+    docker run -p 8888:8888 propra/propay:latest
    
 Mit dem Tag `latest` beziehen Sie die aktuellste Version von ProPay. Wenn Sie
 mehr Sicherheit und Kontrolle über die verwendete Version haben möchten, sollten
