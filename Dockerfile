@@ -1,4 +1,5 @@
 FROM gradle:jdk11-slim as BUILD
+USER root
 WORKDIR /code
 COPY --chown=gradle:gradle . .
 RUN gradle build
