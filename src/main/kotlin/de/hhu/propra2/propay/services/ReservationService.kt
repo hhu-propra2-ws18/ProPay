@@ -55,8 +55,8 @@ class ReservationService(private @Autowired val accountService: AccountService,
         val target = reservation.targetAccount
 
         val result = accountService.transfer(acc, target, reservation.amount)
-        acc.reservations.remove(reservation)
-        return result
+        result.reservations.remove(reservation)
+        return accountService.save(result)
     }
 
 }

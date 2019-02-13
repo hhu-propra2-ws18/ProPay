@@ -115,16 +115,35 @@ class ReservationServiceTest {
 
         acc2.amount = 0.0
 
-        Mockito.`when`(reservationRepository.findById(1))
+        val intermediateAccount = Account(11, acc1.account, acc1.amount, listOf(testReservation).toMutableList())
+        val resultAccount = Account(111, acc1.account, acc1.amount)
+        resultAccount.reservations = Collections.emptyList();
+
+        Mockito.`when`(reservationRepository.findById(testReservation.id!!))
                 .thenReturn(Optional.of(testReservation))
+        Mockito.`when`(accountService.transfer(acc1, acc2, testReservation.amount))
+                .thenReturn(intermediateAccount)
+        Mockito.`when`(accountService.save(intermediateAccount))
+                .thenReturn(resultAccount)
 
 
-        reservationService.punishAndTransferReservation("User 1", 1)
+        val result = reservationService.punishAndTransferReservation("User 1", testReservation.id!!)
 
 
-        assertEquals(0, acc1.reservations.size)
+        // input is not mutated
+        assertEquals(1, acc1.reservations.size)
+        // resulting account is also empty
+        assertEquals(0, result.reservations.size)
+        // result account is third version of acc1
+        assertEquals(resultAccount.id, result.id)
+
         Mockito.verify(accountService, times(1))
                 .transfer(acc1, acc2, reservationAmount)
+
+        Mockito.verify(accountService, times(1))
+                .save(intermediateAccount)
+
+
     }
 
     @Test
