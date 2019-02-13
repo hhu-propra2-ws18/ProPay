@@ -20,7 +20,7 @@ class AccountController {
 
     @CrossOrigin(origins = ["*"])
     @PostMapping("/account/{account}")
-    @ApiOperation(value = "Erhöhe / Verringere das Guthaben eines Accounts", notes = "Veränderung des Accountguthabens. Ein Account kann kein negatives Guthaben haben.")
+    @ApiOperation(value = "Erhöhe das Guthaben eines Accounts", notes = "Veränderung des Accountguthabens. Ein Account kann kein negatives Guthaben haben.")
     fun postDeposit(@PathVariable account: String,
                     @RequestParam amount: Double): Account =
             accountService.deposit(account, amount)
