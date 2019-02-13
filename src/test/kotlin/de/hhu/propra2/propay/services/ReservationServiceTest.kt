@@ -122,7 +122,7 @@ class ReservationServiceTest {
         Mockito.`when`(reservationRepository.findById(testReservation.id!!))
                 .thenReturn(Optional.of(testReservation))
         Mockito.`when`(accountService.transfer(acc1, acc2, testReservation.amount))
-                .thenReturn(intermediateAccount)
+                .thenReturn(Pair(intermediateAccount, acc2))
         Mockito.`when`(accountService.save(intermediateAccount))
                 .thenReturn(resultAccount)
 

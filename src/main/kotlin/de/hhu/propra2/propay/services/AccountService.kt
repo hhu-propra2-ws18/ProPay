@@ -32,7 +32,7 @@ class AccountService(private @Autowired val accountRepository: AccountRepository
         transfer(source, target, amount)
     }
 
-    fun transfer(source: Account, target: Account, amount: Double): Account {
+    fun transfer(source: Account, target: Account, amount: Double): Pair<Account, Account> {
         if (target == source) {
             throw NiceTryException(source)
         }
@@ -48,8 +48,8 @@ class AccountService(private @Autowired val accountRepository: AccountRepository
         source.amount -= amount
         target.amount += amount
 
-        accountRepository.save(source)
-        return accountRepository.save(target)
+        return Pair(accountRepository.save(source),
+                accountRepository.save(target))
     }
 
     fun save(acc: Account) = accountRepository.save(acc)

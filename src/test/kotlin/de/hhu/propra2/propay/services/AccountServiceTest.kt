@@ -90,10 +90,11 @@ class AccountServiceTest {
         Mockito.`when`(accountRepository.save(acc1)).thenReturn(acc1)
         Mockito.`when`(accountRepository.save(acc2)).thenReturn(acc2)
 
-        accountService.transfer(acc1, acc2, 1.1)
+        val (resultAcc1, resultAcc2)
+                = accountService.transfer(acc1, acc2, 1.1)
 
-        assertEquals(8.9, acc1.amount, .1)
-        assertEquals(11.1, acc2.amount, .1)
+        assertEquals(8.9, resultAcc1.amount, .1)
+        assertEquals(11.1, resultAcc2.amount, .1)
     }
 
     @Test(expected = NiceTryException::class)

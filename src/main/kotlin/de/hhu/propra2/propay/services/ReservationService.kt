@@ -52,11 +52,11 @@ class ReservationService(private @Autowired val accountService: AccountService,
                 .findById(reservationId)
                 .orElseThrow { ReservationNotFoundException(acc, reservationId) }
 
-        val target = reservation.targetAccount
+        val (updatedSource, _) = accountService.transfer(
+                acc, reservation.targetAccount, reservation.amount)
 
-        val result = accountService.transfer(acc, target, reservation.amount)
-        result.reservations.remove(reservation)
-        return accountService.save(result)
+        updatedSource.reservations.remove(reservation)
+        return accountService.save(updatedSource)
     }
 
 }
