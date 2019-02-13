@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class ReservationService(private @Autowired val accountService: AccountService,
-                         private @Autowired val reservationRepository: ReservationRepository) {
+class ReservationService(private val accountService: AccountService,
+                         private val reservationRepository: ReservationRepository) {
 
 
     fun reserve(account: String, targetAccount: String, amount: Double): Reservation {

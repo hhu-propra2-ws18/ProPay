@@ -5,11 +5,10 @@ import de.hhu.propra2.propay.exceptions.AttemptedRobberyException
 import de.hhu.propra2.propay.exceptions.InsufficientFundsException
 import de.hhu.propra2.propay.exceptions.NiceTryException
 import de.hhu.propra2.propay.repositories.AccountRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class AccountService(private @Autowired val accountRepository: AccountRepository) {
+class AccountService(private val accountRepository: AccountRepository) {
 
     fun getAccount(account: String): Account =
             accountRepository.findByAccount(account)
