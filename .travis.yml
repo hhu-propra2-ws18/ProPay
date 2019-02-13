@@ -3,6 +3,7 @@ deploy:
   provider: heroku
   api_key:
     secure: i7x3UKXXpLh+4j/xhsw0nfnnXcY/Cd9DpVko00jtTVId6dPUUU9tRK3euBORgBTkvfD0MhOOEICVNmWIWPx2demw1PdYJ2U7ed/UXHynt6/LSuifLUNxqKahGi20km5gGVlbQo0k5UAH23ip9O6hU/xr4axvsVjjGHCTk3EkPX1gJEoYtC3q7gw9T0n/DCzqj6eQz5RbFfjPWz68mFThlWKHPr2zlwutJdE2rgw8GgCK73RgpVqCGUCmjtXhRWXmVW5Lhaa4sHygMZBBJlHSNvnefB8F2xWAGiVq4bURKor5jE2AwWK4F4Vf5ZC4KFNOxRUZWzdcewumJUca1xYhYRb8wavGzVe1DGF9tqmwl/PtfYTb7SBxoEOS2B78hF8z5+0D/OpowhgzmEWdzLhJQG1j3tq9Gm9EWdDMGnQ9y2Z3LasChuOpxS8LnF2EuuKKT5k0lKmPtzulDwagKpoNAAeVima2xjVuPWgvQM19fnjggABIDiGv5AqRhxEXVvFMHZ4zBCG/22vy+7CJ++x87IIFYdw+Ag668Xt8sNAoH7gfF1vLKUsrv9T/pWw7XW7aV78zUkA6ybA5M4a+hIcjUF706PP4blB//lVXrdm4mPhrqxY3+Ow6xQHOHqVmFDh53C7KCMLTYRcBMgPMTlDj89qMsFiOT1ckNd2wkNRVfGI=
-  app: propra-propay
+  app:
+    master: propra-propay
   on:
     repo: hhu-propra2/ProPay
