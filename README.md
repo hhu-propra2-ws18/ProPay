@@ -1,6 +1,7 @@
 # ProPay
 
 [![Build Status](https://travis-ci.org/hhu-propra2/ProPay.svg?branch=master)](https://travis-ci.org/hhu-propra2/ProPay)
+[![https://github.com/hhu-propra2/ProPay/releases](https://img.shields.io/github/release/hhu-propra2/propay.svg)](https://GitHub.com/hhu-propra2/propay/releases/)
 
 *Next generation Payment Processor*
 
