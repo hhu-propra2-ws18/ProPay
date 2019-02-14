@@ -27,8 +27,8 @@ class SwaggerConfig {
     private fun apiInfo(): ApiInfo {
         return ApiInfo(
                 "ProPay",
-                "ProPay Next Generation Payment Processor API",
-                "1.0.0",
+                "Next Generation Payment Processor API",
+                "1.1.0",
                 "Terms of service",
                 Contact("ProPra", "www.hhu.de", "propra@cs.uni-duesseldorf.de"),
                 "License of API", "API license URL", Collections.emptyList())

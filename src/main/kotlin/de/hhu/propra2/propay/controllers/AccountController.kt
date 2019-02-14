@@ -14,15 +14,15 @@ class AccountController {
 
     @CrossOrigin(origins = ["*"])
     @GetMapping("/account/{account}")
-    @ApiOperation(value = "Zeigt Accountinformationen an", notes = "Gibt die Informationen zu einem Account zurück. Wenn der Account noch nicht existierte, wird ein leerer Account angelegt.")
+    @ApiOperation(value = "Zeigt Accountinformationen an", notes = "Gibt die Informationen zu einem Account zurück. Wenn der Account noch nicht existiert, wird ein leerer Account angelegt.")
     fun getAccount(@PathVariable account: String): Account =
             accountService.getAccount(account)
 
     @CrossOrigin(origins = ["*"])
     @PostMapping("/account/{account}")
-    @ApiOperation(value = "Erhöhe das Guthaben eines Accounts", notes = "Veränderung des Accountguthabens. Ein Account kann kein negatives Guthaben haben.")
+    @ApiOperation(value = "Account erstellen und ggf. Guthaben erhöhen", notes = "Wenn der Account noch nicht existiert, wird er angelegt. Erhöht den Account um den Wert in `amount`. Ist `amount` leer, wird es als `0` interpretiert.")
     fun postDeposit(@PathVariable account: String,
-                    @RequestParam amount: Double): Account =
+                    @RequestParam(defaultValue = "0.0") amount: Double): Account =
             accountService.deposit(account, amount)
 
     @CrossOrigin(origins = ["*"])
