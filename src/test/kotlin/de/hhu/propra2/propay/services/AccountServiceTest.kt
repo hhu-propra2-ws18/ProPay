@@ -6,7 +6,6 @@ import de.hhu.propra2.propay.exceptions.InsufficientFundsException
 import de.hhu.propra2.propay.exceptions.NiceTryException
 import de.hhu.propra2.propay.repositories.AccountRepository
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
@@ -29,14 +28,19 @@ class AccountServiceTest {
     fun getAccount() {
         Mockito.`when`(accountRepository.findByAccount("asdf"))
                 .thenReturn(null)
+        Mockito.`when`(accountRepository.save(Account(null, "asdf", 0.0)))
+                .thenReturn(Account(333, "asdf", 0.0))
         Mockito.`when`(accountRepository.findByAccount("foo"))
                 .thenReturn(Account(123, "foo", 0.0))
 
-        assertNull(accountService.getAccount("asdf").id)
+
+        // new account gets created
+        assertEquals(333L, accountService.getAccount("asdf").id)
 
         assertEquals("asdf",
                 accountService.getAccount("asdf").account)
 
+        // existing account is retrieved
         assertEquals(123L, accountService.getAccount("foo").id)
 
         assertEquals("foo",

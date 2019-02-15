@@ -12,7 +12,7 @@ class AccountService(private val accountRepository: AccountRepository) {
 
     fun getAccount(account: String): Account =
             accountRepository.findByAccount(account)
-                    ?: Account(null, account, 0.0)
+                    ?: accountRepository.save(Account(null, account, 0.0))
 
     fun deposit(accountName: String, amount: Double): Account {
         val acc = getAccount(accountName)
