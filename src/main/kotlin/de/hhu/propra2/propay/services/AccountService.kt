@@ -44,6 +44,10 @@ class AccountService(private val accountRepository: AccountRepository) {
             throw InsufficientFundsException(source, amount)
         }
 
+        return move(source = source, target = target, amount = amount)
+    }
+
+    internal fun move(source: Account, target: Account, amount: Double): Pair<Account, Account> {
         source.amount -= amount
         target.amount += amount
 

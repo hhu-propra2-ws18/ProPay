@@ -7,7 +7,6 @@ import de.hhu.propra2.propay.exceptions.InsufficientFundsException
 import de.hhu.propra2.propay.exceptions.NiceTryException
 import de.hhu.propra2.propay.exceptions.ReservationNotFoundException
 import de.hhu.propra2.propay.repositories.ReservationRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
@@ -52,8 +51,10 @@ class ReservationService(private val accountService: AccountService,
                 .findById(reservationId)
                 .orElseThrow { ReservationNotFoundException(acc, reservationId) }
 
-        val (updatedSource, _) = accountService.transfer(
-                acc, reservation.targetAccount, reservation.amount)
+        val amount = reservation.amount
+        val target = reservation.targetAccount
+
+        val (updatedSource, _) = accountService.move(acc, target, amount)
 
         updatedSource.reservations.remove(reservation)
         return accountService.save(updatedSource)

@@ -121,7 +121,7 @@ class ReservationServiceTest {
 
         Mockito.`when`(reservationRepository.findById(testReservation.id!!))
                 .thenReturn(Optional.of(testReservation))
-        Mockito.`when`(accountService.transfer(acc1, acc2, testReservation.amount))
+        Mockito.`when`(accountService.move(acc1, acc2, testReservation.amount))
                 .thenReturn(Pair(intermediateAccount, acc2))
         Mockito.`when`(accountService.save(intermediateAccount))
                 .thenReturn(resultAccount)
@@ -138,32 +138,12 @@ class ReservationServiceTest {
         assertEquals(resultAccount.id, result.id)
 
         Mockito.verify(accountService, times(1))
-                .transfer(acc1, acc2, reservationAmount)
+                .move(acc1, acc2, reservationAmount)
 
         Mockito.verify(accountService, times(1))
                 .save(intermediateAccount)
 
 
-    }
-
-    @Test
-    fun punishAndTransferReservationNoFunds() {
-        val reservationService = ReservationService(accountService, reservationRepository)
-
-        Mockito.`when`(reservationRepository.findById(1)).thenReturn(Optional.of(testReservation))
-        Mockito.`when`(accountService.transfer(acc1, acc2, reservationAmount))
-                .thenThrow(InsufficientFundsException(acc1, reservationAmount))
-
-        acc1.reservations = listOf(testReservation).toMutableList()
-        acc1.amount = 198.0
-
-        try {
-            reservationService.punishAndTransferReservation("User 1", 1)
-        } catch (exc: InsufficientFundsException) {
-            // pass expected case
-        }
-
-        assertEquals(1, acc1.reservations.size)
     }
 
     @Test(expected = ReservationNotFoundException::class)
@@ -173,5 +153,28 @@ class ReservationServiceTest {
         Mockito.`when`(reservationRepository.findById(1)).thenReturn(Optional.empty())
 
         reservationService.punishAndTransferReservation("User 1", 1)
+    }
+
+    @Test
+    fun punishAndTransferReservationExactlyRightAmountOfFunds() {
+        val reservationService = ReservationService(accountService, reservationRepository)
+
+        val intermediateAccount = Account(11, acc1.account, acc1.amount, listOf(testReservation).toMutableList())
+        val resultAccount = Account(111, acc1.account, acc1.amount)
+
+        Mockito.`when`(reservationRepository.findById(1))
+                .thenReturn(Optional.of(testReservation))
+        Mockito.`when`(accountService.move(acc1, acc2, testReservation.amount))
+                .thenReturn(Pair(intermediateAccount, acc2))
+        Mockito.`when`(accountService.save(intermediateAccount))
+                .thenReturn(resultAccount)
+
+        acc1.reservations = listOf(testReservation).toMutableList()
+        acc1.amount = reservationAmount
+
+        val result = reservationService.punishAndTransferReservation("User 1", 1)
+
+        assertEquals(0, result.reservations.size)
+        assertEquals(0.0, result.amount, 0.1)
     }
 }
